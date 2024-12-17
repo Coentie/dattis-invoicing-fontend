@@ -1,0 +1,14 @@
+    <div class="w-full">
+    @if(label() !== null) {
+        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ label() }}</label>
+    }
+    <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+        @if(default() !== null) {
+            <option selected disabled>Choose a country</option>
+        }
+
+        @for(row of data(); track row.key) {
+            <option [value]="row.key">{{ row.value }}</option>
+        }
+    </select>
+</div>

@@ -1,0 +1,26 @@
+<app-card>
+    <p title i18n>Facturen</p>
+    <app-table [rows]="invoices()" [columns]="columns" [template]="rows" />
+
+    <ng-template #rows let-row>
+        <td appTd>
+          {{ row.id }}
+        </td>
+        <td appTd>
+          {{ row.name }}
+        </td>
+        <td appTd>
+          {{ row.created_at }}
+        </td>
+        <td appTd>
+          {{ row.updated_at }}
+        </td>
+        <td appTd>
+          @if(row.paid === false) {
+            <app-pay-button [invoice]="row" (paid)="onPaidHandler($event)"/>
+          } @else {
+            Already paid
+          }
+        </td>
+    </ng-template>
+</app-card>
