@@ -6,6 +6,10 @@ import {Invoice} from '../../../models/invoice';
 import { TableDataComponent } from "../../shared/table/table-data/table-data.component";
 import { PayButtonComponent } from "../payment/pay-button/pay-button.component";
 import { environment } from '../../../environments/environment.development';
+import { ModalComponent } from '../../shared/modal/modal.component';
+import { CustomerDropdownComponent } from '../../customer/dropdown/dropdown.component';
+import { TaxDropdownComponent } from "../../finance/tax/tax-dropdown/tax-dropdown.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-invoice-tabel',
@@ -13,12 +17,21 @@ import { environment } from '../../../environments/environment.development';
     CardComponent,
     TableComponent,
     TableDataComponent,
-    PayButtonComponent
+    PayButtonComponent,
+    ModalComponent,
+    CustomerDropdownComponent,
+    TaxDropdownComponent,
+    FormsModule
 ],
   templateUrl: './invoice-tabel.component.html',
 })
 export class InvoiceTabelComponent implements OnInit {
   invoices = signal<Invoice[]>([]);
+
+  newInvoiceName = signal<string|null>(null);
+  newInvoiceCustomerId = signal<Number|null>(null);
+
+  isCreatingInvoice = signal<boolean>(false);
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
 
@@ -34,6 +47,30 @@ export class InvoiceTabelComponent implements OnInit {
         return i;
       })
     })
+  }
+
+  onCancelCreateClickHandler() {
+    this.isCreatingInvoice.set(false);
+  }
+
+  onCreateInvoiceClickHandler() {
+    const postSub = this.httpClient.post(environment.apiUrl + 'invoices', {
+      name: this.newInvoiceName(),
+      customer: this.newInvoiceCustomerId()
+    }).subscribe({
+      next: () => {
+
+
+        postSub.unsubscribe();
+      }
+    })
+  }
+
+  /**
+   * Handles the click event from the "new" button
+   */
+  onNewClickHandler() {
+    this.isCreatingInvoice.set(true);
   }
 
   get columns() {

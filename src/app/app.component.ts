@@ -7,32 +7,14 @@ import { SelectData } from '../types/forms/types';
 import { SelectComponent } from "./shared/forms/select/select.component";
 import { map } from 'rxjs';
 import { environment } from '../environments/environment.development';
+import { ModalComponent } from "./shared/modal/modal.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, InvoiceTabelComponent, SelectComponent],
+  imports: [RouterOutlet, InvoiceTabelComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-    title = 'invoicing';
-    customers = signal<SelectData[]>([]);
-    private httpClient = inject(HttpClient);
-    private destroyRef = inject(DestroyRef);
-  
+export class AppComponent {
 
-      ngOnInit() {
-        const sub = this.httpClient.get<Customer[]>(environment.apiUrl + "customers").subscribe({
-          next: (res: Customer[]) => {
-            const mapped = res.map((customer) => { 
-              return {key: `${customer.id}`, value: customer.name};
-            });
-            this.customers.set(mapped);
-          }
-        })
-    
-        this.destroyRef.onDestroy(() => {
-          sub.unsubscribe();
-        })
-      }
 }

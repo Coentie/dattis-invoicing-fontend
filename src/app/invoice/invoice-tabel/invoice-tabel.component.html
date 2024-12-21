@@ -1,5 +1,12 @@
-<app-card>
-    <p title i18n>Facturen</p>
+<app-card> 
+    <div title class="flex justify-between items-center">
+      <p i18n>Facturen</p>
+
+      <button (click)="onNewClickHandler()" i18n type="button" class="text-white bg-blue-700 hover:bg-blue-800 rounded-sm text-sm px-5 py-2 focus:outline-none dark:focus:ring-blue-800">
+        New
+      </button>
+    </div>
+
     <app-table [rows]="invoices()" [columns]="columns" [template]="rows" />
 
     <ng-template #rows let-row>
@@ -24,3 +31,26 @@
         </td>
     </ng-template>
 </app-card>
+
+<app-modal [(viewable)]="isCreatingInvoice">
+  <div title>Nieuwe factuur aanmaken</div>
+  <div body>
+    <div class="flex flex-col mb-4">
+      <label for="name" class="block mb-1 text-sm font-medium text-gray-900">Naam</label>
+      <input [(ngModel)]="newInvoiceName" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5">
+    </div>
+
+    <app-customer-dropdown class="mb-4" />
+  </div>
+
+  <div actions>
+    <button (click)="onCancelCreateClickHandler()" i18n type="button" class="text-gray-700 bg-gray-300 hover:bg-gray-500 rounded-sm text-sm px-5 py-2 focus:outline-none">
+      Annuleren
+    </button>
+
+    <button (click)="onCreateInvoiceClickHandler()" i18n type="button" class="text-white bg-blue-700 hover:bg-blue-800 rounded-sm text-sm px-5 py-2 focus:outline-none dark:focus:ring-blue-800">
+      Opslaan
+    </button>
+  </div>
+</app-modal>
+
