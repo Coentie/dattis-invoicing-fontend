@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { SelectData } from '../../../../types/forms/types';
 import { HttpClient } from '@angular/common/http';
 import { Tax } from '../../../../models/tax';
@@ -15,6 +15,10 @@ import { SelectComponent } from '../../../shared/forms/select/select.component';
 export class TaxDropdownComponent {
   title = 'Belastingtarieven';
   taxRates = signal<SelectData[]>([]);
+  
+  taxRate = input<SelectData|null>(null);
+  taxRateChange = output<SelectData|null>();
+
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
 

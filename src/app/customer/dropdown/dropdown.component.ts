@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { SelectData } from '../../../types/forms/types';
 import { HttpClient } from '@angular/common/http';
 import { Customer } from '../../../models/customer';
@@ -15,9 +15,20 @@ import { SelectComponent } from '../../shared/forms/select/select.component';
 export class CustomerDropdownComponent {
   title = 'invoicing';
   customers = signal<SelectData[]>([]);
+
+  customer = signal<number>(0);
+  customerChange = output<number>();
+
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
 
+  get selected(): number {
+    return this.customer();
+  }
+
+  set selected(value: number) {
+    this.customerChange.emit(value);
+  }
 
     ngOnInit() {
       const sub = this.httpClient.get<Customer[]>(environment.apiUrl + "customers").subscribe({
