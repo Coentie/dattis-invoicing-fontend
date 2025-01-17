@@ -38,4 +38,29 @@ export class InvoiceService {
             return curr.map((invoice: Invoice) => invoice.id === newInvoice.id ? newInvoice : invoice)
         })
     }
+
+    /**
+     * Creates a new invoice.
+     * 
+     * @param name 
+     * @param customerId 
+     * @param onSuccess 
+     * @param onError 
+     */
+    create(name: string, customerId: Number, onSuccess: (res: any) => {}, onError = () => {}) {
+        const sub = this.httpClient.post<Invoice>(environment.apiUrl + 'invoices', {
+            name: name,
+            customer: customerId
+          })
+          .subscribe({
+            next: (res: Invoice) => {
+                this.invoices.update(curr => [...curr, res]);
+                onSuccess(res);
+                sub.unsubscribe();
+            },
+            error: onError,
+          })
+    }
 }
+    
+    

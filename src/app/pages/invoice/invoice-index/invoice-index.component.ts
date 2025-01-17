@@ -1,11 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
-import { environment } from '../../../../environments/environment.development';
 import { CardComponent } from '../../../shared/card/card.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { CustomerDropdownComponent } from '../../../customer/dropdown/dropdown.component';
 import { FormsModule } from '@angular/forms';
 import { InvoiceTabelComponent } from "../../../invoice/invoice-tabel/invoice-tabel.component";
+import { InvoiceService } from '../../../invoice/invoiceService';
+import { Invoice } from '../../../../models/invoice';
 
 @Component({
   selector: 'app-invoice-index',
@@ -19,7 +19,7 @@ import { InvoiceTabelComponent } from "../../../invoice/invoice-tabel/invoice-ta
   templateUrl: './invoice-index.component.html',
 })
 export class InvoiceIndexComponent {
-  private httpClient = inject(HttpClient);
+  private InvoiceService = inject(InvoiceService);
 
   newInvoiceName = signal<string|null>(null);
   newCustomer = signal<string>('0')
@@ -33,21 +33,17 @@ export class InvoiceIndexComponent {
     this.isCreatingInvoice = false;
   }
 
-
+  /**
+   * Handler for on create click action.
+   */
   onCreateInvoiceClickHandler() {
-    const postSub = this.httpClient.post(environment.apiUrl + 'invoices', {
-      name: this.newInvoiceName(),
-      customer: parseInt(this.newCustomer())
-    }).subscribe({
-      next: (res) => {
-        this.isCreatingInvoice = false;
-        postSub.unsubscribe();
-      },
-      error: () => {
-
-      }
-    })
+    this.InvoiceService.create(
+      this.newInvoiceName()!,
+      parseInt(this.newCustomer()),
+      (res: Invoice) => this.isCreatingInvoice = false
+    );
   }
+
 
   /**
    * Handles the click event from the "new" button

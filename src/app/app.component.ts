@@ -6,7 +6,6 @@ import { CardComponent } from './shared/card/card.component';
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    CardComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
