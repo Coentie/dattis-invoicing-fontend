@@ -1,14 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { Invoice } from '../../../../models/invoice';
+import { Component, inject, signal } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { CardComponent } from '../../../shared/card/card.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { CustomerDropdownComponent } from '../../../customer/dropdown/dropdown.component';
-import { TaxDropdownComponent } from '../../../finance/tax/tax-dropdown/tax-dropdown.component';
 import { FormsModule } from '@angular/forms';
 import { InvoiceTabelComponent } from "../../../invoice/invoice-tabel/invoice-tabel.component";
-import { SelectData } from '../../../../types/forms/types';
 
 @Component({
   selector: 'app-invoice-index',
@@ -22,13 +19,13 @@ import { SelectData } from '../../../../types/forms/types';
   templateUrl: './invoice-index.component.html',
 })
 export class InvoiceIndexComponent {
-  newInvoiceName = signal<string|null>(null);
-  newCustomer = signal<number|null>(null)
-  isCreatingInvoice = false;
-
   private httpClient = inject(HttpClient);
 
-  onCustomerChangeHandler(value: number) {
+  newInvoiceName = signal<string|null>(null);
+  newCustomer = signal<string>('0')
+  isCreatingInvoice = false;
+
+  onCustomerChangeHandler(value: string) {
     this.newCustomer.set(value);
   }
 
@@ -40,12 +37,14 @@ export class InvoiceIndexComponent {
   onCreateInvoiceClickHandler() {
     const postSub = this.httpClient.post(environment.apiUrl + 'invoices', {
       name: this.newInvoiceName(),
-      customer: this.newCustomer()
+      customer: parseInt(this.newCustomer())
     }).subscribe({
-      next: () => {
-
-
+      next: (res) => {
+        this.isCreatingInvoice = false;
         postSub.unsubscribe();
+      },
+      error: () => {
+
       }
     })
   }

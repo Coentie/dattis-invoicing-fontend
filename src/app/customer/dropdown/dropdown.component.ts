@@ -17,7 +17,7 @@ export class CustomerDropdownComponent {
   customers = signal<SelectData[]>([]);
 
   customer = signal<number>(0);
-  customerChange = output<number>();
+  customerChange = output<string>();
 
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
@@ -26,7 +26,7 @@ export class CustomerDropdownComponent {
     return this.customer();
   }
 
-  set selected(value: number) {
+  set selected(value: string) {
     this.customerChange.emit(value);
   }
 
