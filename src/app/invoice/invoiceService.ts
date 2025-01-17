@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { environment } from "../../environments/environment.development";
 import { Invoice } from "../../models/invoice";
 import { HttpClient } from "@angular/common/http";
+import { firstValueFrom } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -47,7 +48,7 @@ export class InvoiceService {
      * @param onSuccess 
      * @param onError 
      */
-    create(name: string, customerId: Number, onSuccess: (res: any) => {}, onError = () => {}) {
+    create(name: string, customerId: Number, onSuccess: Function, onError = () => {}) {
         const sub = this.httpClient.post<Invoice>(environment.apiUrl + 'invoices', {
             name: name,
             customer: customerId
@@ -60,6 +61,16 @@ export class InvoiceService {
             },
             error: onError,
           })
+    }
+ 
+    async find(id: string|Number): Promise<Invoice> {
+        const foundInvoice = this.invoices().find((invoice: Invoice) => {
+            return invoice.id === id;
+        })
+
+        if(foundInvoice) return foundInvoice;
+
+        return await firstValueFrom<Invoice>(this.httpClient.get<Invoice>(environment.apiUrl + `invoices/${id}`));
     }
 }
     

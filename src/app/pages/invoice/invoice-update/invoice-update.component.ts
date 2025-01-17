@@ -3,6 +3,8 @@ import { CardComponent } from '../../../shared/card/card.component';
 import { HttpClient } from '@angular/common/http';
 import { Invoice } from '../../../../models/invoice';
 import { environment } from '../../../../environments/environment.development';
+import { InvoiceService } from '../../../invoice/invoiceService';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-invoice-update',
@@ -12,20 +14,14 @@ import { environment } from '../../../../environments/environment.development';
   templateUrl: './invoice-update.component.html',
 })
 export class InvoiceUpdateComponent implements OnInit {
-  private httpClient = inject(HttpClient);
-  private destroyRef = inject(DestroyRef);
-
-  invoice = signal<Invoice|null>(null)
-
-    ngOnInit() {
-      const sub = this.httpClient.get<Invoice[]>(environment.apiUrl + 'invoices/').subscribe({
-        next: (res: any) => {
-          this.invoice.set(res);
-        }
-      })
+  private invoiceService = inject(InvoiceService);
+  private readonly route = inject(ActivatedRoute);
   
-      this.destroyRef.onDestroy(() => {
-        sub.unsubscribe();
-      })
+  async ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if(id) {
+      const invoice = await this.invoiceService.find(id)
     }
+  }
 }

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { InvoiceTabelComponent } from "../../../invoice/invoice-tabel/invoice-tabel.component";
 import { InvoiceService } from '../../../invoice/invoiceService';
 import { Invoice } from '../../../../models/invoice';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invoice-index',
@@ -20,6 +21,7 @@ import { Invoice } from '../../../../models/invoice';
 })
 export class InvoiceIndexComponent {
   private InvoiceService = inject(InvoiceService);
+  private router = inject(Router);
 
   newInvoiceName = signal<string|null>(null);
   newCustomer = signal<string>('0')
@@ -40,7 +42,10 @@ export class InvoiceIndexComponent {
     this.InvoiceService.create(
       this.newInvoiceName()!,
       parseInt(this.newCustomer()),
-      (res: Invoice) => this.isCreatingInvoice = false
+      (res: Invoice) => {
+        this.isCreatingInvoice = false
+        this.router.navigate([`/invoices/${res.id}`]);;
+      }
     );
   }
 
