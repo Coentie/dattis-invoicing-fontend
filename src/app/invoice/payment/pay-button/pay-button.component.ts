@@ -3,6 +3,7 @@ import { Invoice } from '../../../../models/invoice';
 import { HttpClient } from '@angular/common/http';
 import { ThisReceiver } from '@angular/compiler';
 import { environment } from '../../../../environments/environment.development';
+import { InvoiceService } from '../../invoiceService';
 
 @Component({
   selector: 'app-pay-button',
@@ -10,15 +11,13 @@ import { environment } from '../../../../environments/environment.development';
   templateUrl: './pay-button.component.html',
 })
 export class PayButtonComponent {
-  private httpClient = inject(HttpClient);
+ invoiceService = inject(InvoiceService);
   invoice = input.required<Invoice>();
   paid = output<Invoice>();
 
-  async pay() {
-    const sub = this.httpClient.put<Invoice>(environment.apiUrl + `invoices/${this.invoice().id}`, null).subscribe({
-      next: (res: Invoice) => {
-        this.paid.emit(res);
-        sub.unsubscribe()
-    }});
+  pay() {
+    this.invoiceService.pay(this.invoice().id, (res: Invoice) => {
+      this.paid.emit(res);
+    })
   }
 }
