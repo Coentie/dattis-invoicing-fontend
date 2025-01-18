@@ -63,6 +63,12 @@ export class InvoiceService {
           })
     }
  
+    /**
+     * Finds an invoice based on ID, either from the cached invoices or a single call.
+     * 
+     * @param id 
+     * @returns 
+     */
     async find(id: string|Number): Promise<Invoice> {
         const foundInvoice = this.invoices().find((invoice: Invoice) => {
             return invoice.id === id;

@@ -13,11 +13,7 @@
     {{ row.updated_at }}
   </td>
   <td appTd>
-    @if(row.paid === false) {
-      <app-pay-button [invoice]="row" (paid)="onPaidHandler($event)"/>
-    } @else {
-      Already paid
-    }
+    <app-edit-button [invoice]="row"></app-edit-button>
   </td>
 </ng-template>
 

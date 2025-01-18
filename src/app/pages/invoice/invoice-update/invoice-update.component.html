@@ -2,4 +2,13 @@
     <div title class="flex justify-between items-center">
         Updating invoice
     </div>
+
+    <div class="flex">
+        <b>Klant:</b>
+        <p>{{ invoice()?.customer?.name }}</p>
+    </div>
+    <div class="flex">
+        <b>Factuurstatus:</b>
+        <p>{{ invoice()?.invoiceStatus?.name }}</p>
+    </div>
 </app-card>
