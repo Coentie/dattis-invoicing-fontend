@@ -1,11 +1,12 @@
 import { Customer } from "./customer"
+import { invoiceLine } from "./invoiceLine"
 import { InvoiceStatus } from "./invoiceStatus"
 
 export interface Invoice {
     id: Number,
     customerId: Number, 
     invoiceStatusId: Number,
-    
+
     name: string,
     paid: boolean,
 
@@ -14,4 +15,5 @@ export interface Invoice {
 
     customer: Customer|null,
     invoiceStatus: InvoiceStatus|null,
+    invoiceLines: invoiceLine[]
 }

@@ -12,3 +12,33 @@
         <p>{{ invoice()?.invoiceStatus?.name }}</p>
     </div>
 </app-card>
+<div class="my-1">&nbsp;</div>
+<app-card> 
+    <div title class="flex justify-between items-center">
+        Invoice lines
+
+        <app-create-invoice-line-button />
+    </div>
+
+    @if(invoice()) {
+        <app-table [rows]="invoice()!.invoiceLines" [columns]="columns" [template]="rows" />
+        <ng-template #rows let-row>
+        <td appTd>
+            {{ row.id }}
+        </td>
+        <td appTd>
+            {{ row.name }}
+        </td>
+        <td appTd>
+            {{ row.amount }}
+        </td>
+        <td appTd>
+            {{ row.unitPrice }}
+        </td>
+        <td appTd>
+            Delete / Edit
+        </td>
+        </ng-template>
+    }
+
+</app-card>
